@@ -1,0 +1,24 @@
+.resume-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  max-width: 400px;
+  margin: 0 auto;
+}
+.resume-form input,
+.resume-form textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+.resume-form button {
+  background: #2563eb;
+  color: #fff;
+  border: none;
+  padding: 10px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+.resume-form button:hover {
+  background: #1d4ed8;
+}
