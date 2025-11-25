@@ -155,10 +155,10 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 flex">
+    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 flex">
       {/* Desktop left navbar with only menu icons */}
-      <div className="hidden md:flex flex-col items-center justify-center py-8 px-2 bg-white shadow fixed left-0 h-screen w-16 z-10">
-        <div className="flex flex-col gap-6">
+      <div className="hidden md:flex flex-col items-center justify-center py-8 px-2 bg-white shadow-lg fixed left-0 h-screen w-20 z-10 border-r border-gray-200">
+        <div className="flex flex-col gap-8">
           <button
             className={`p-3 rounded-full transition-all duration-150 ${
               showForm ? "bg-blue-600 text-white" : "bg-gray-200 text-blue-600"
@@ -209,11 +209,52 @@ const App = () => {
               />
             </svg>
           </button>
+          <div className="w-full h-px bg-gray-300 my-2"></div>
+          <button
+            className="p-3 rounded-full transition-all duration-150 bg-gray-200 text-green-600 hover:bg-green-600 hover:text-white"
+            onClick={handlePrint}
+            title="Print Resume"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+              />
+            </svg>
+          </button>
+          <button
+            className="p-3 rounded-full transition-all duration-150 bg-gray-200 text-blue-600 hover:bg-blue-600 hover:text-white"
+            onClick={handleDownloadPDF}
+            title="Download as PDF"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+              />
+            </svg>
+          </button>
         </div>
       </div>
 
       {/* Mobile footer menu with icons */}
-      <div className="md:hidden fixed bottom-0 left-0 w-full bg-white shadow flex justify-center gap-8 py-3 z-20 border-t">
+      <div className="md:hidden fixed bottom-0 left-0 w-full bg-white shadow flex justify-center gap-4 py-3 z-20 border-t">
         <button
           className={`p-3 rounded-full transition-all duration-150 ${
             showForm ? "bg-blue-600 text-white" : "bg-gray-200 text-blue-600"
@@ -264,22 +305,62 @@ const App = () => {
             />
           </svg>
         </button>
+        <button
+          className="p-3 rounded-full transition-all duration-150 bg-gray-200 text-green-600 hover:bg-green-600 hover:text-white"
+          onClick={handlePrint}
+          title="Print Resume"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+            />
+          </svg>
+        </button>
+        <button
+          className="p-3 rounded-full transition-all duration-150 bg-gray-200 text-blue-600 hover:bg-blue-600 hover:text-white"
+          onClick={handleDownloadPDF}
+          title="Download as PDF"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+            />
+          </svg>
+        </button>
       </div>
 
       {/* Main content area */}
       <div
-        className="flex-1 md:ml-16 overflow-y-auto"
+        className="flex-1 md:ml-20 overflow-y-auto"
         style={{ height: "100vh" }}
       >
-        <div className="py-4 px-4 min-h-full">
-          <div className="pb-20 md:pb-0">
-            <h1 className="text-3xl md:text-4xl font-bold text-center mb-6 text-blue-700">
+        <div className="py-8 px-6 md:px-10 min-h-full">
+          <div className="pb-20 md:pb-8 max-w-[1800px] mx-auto">
+            <h1 className="text-4xl md:text-5xl font-bold text-center mb-8 bg-gradient-to-r from-blue-600 to-blue-800 bg-clip-text text-transparent">
               Resume Builder
             </h1>
 
             {/* Example buttons horizontal scrollable bar */}
-            <div className="mb-6 overflow-x-auto">
-              <div className="flex gap-2 justify-center md:justify-start min-w-max mx-auto md:mx-0 w-fit">
+            <div className="mb-8 overflow-x-auto">
+              <div className="flex gap-3 justify-center md:justify-center min-w-max mx-auto w-fit">
                 {exampleResumes.map((ex, idx) => (
                   <button
                     key={idx}
@@ -341,62 +422,70 @@ const App = () => {
             </div>
 
             {/* Content area with form and preview */}
-            <div className="flex flex-col md:flex-row gap-6">
+            <div className="flex flex-col md:flex-row gap-8 md:gap-8 items-stretch justify-center md:items-start w-full">
               {/* Form Section */}
               <div
-                className={`md:w-7/12 w-full ${!showForm && "hidden md:block"}`}
+                className={`md:flex-1 md:max-w-[600px] w-full flex flex-col ${
+                  !showForm && "hidden md:flex"
+                }`}
+                style={{ minWidth: 0 }}
               >
+                <div className="mb-3">
+                  <h2 className="text-xl font-semibold text-gray-700 flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-blue-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                      />
+                    </svg>
+                    Edit Resume
+                  </h2>
+                </div>
                 <ResumeForm data={resumeData} setData={setResumeData} />
               </div>
 
               {/* Preview Section */}
               <div
-                className={`md:w-5/12 w-full ${showForm && "hidden md:block"}`}
+                className={`md:flex-1 md:max-w-[650px] w-full flex flex-col ${
+                  showForm && "hidden md:flex"
+                }`}
+                style={{ minWidth: 0 }}
               >
-                <div className="mb-4">
-                  <ResumePreview data={resumeData} ref={previewRef} />
+                <div className="mb-3">
+                  <h2 className="text-xl font-semibold text-gray-700 flex items-center gap-2">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5 text-blue-600"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                      />
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                      />
+                    </svg>
+                    Preview
+                  </h2>
                 </div>
-                <div className="flex flex-col sm:flex-row justify-center gap-2 sticky bottom-20 md:bottom-4 bg-gray-50 py-4 z-10">
-                  <button
-                    onClick={handlePrint}
-                    className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-2 rounded shadow hover:bg-green-700"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
-                      />
-                    </svg>
-                    Print Resume
-                  </button>
-                  <button
-                    onClick={handleDownloadPDF}
-                    className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700"
-                  >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
-                      />
-                    </svg>
-                    Download as PDF
-                  </button>
+                <div className="mb-4 flex-1 flex items-start justify-center">
+                  <ResumePreview data={resumeData} ref={previewRef} />
                 </div>
               </div>
             </div>

@@ -2,7 +2,7 @@ import React, { forwardRef } from "react";
 
 const ResumePreview = forwardRef(function ResumePreview({ data }, ref) {
   return (
-    <div ref={ref} className="bg-white w-full shadow px-8 pb-8">
+    <div ref={ref} className="bg-white w-full shadow px-0 pb-8">
       <h1 className="text-3xl font-bold mb-2 text-blue-700">{data.name}</h1>
       <div className="flex gap-8 mb-4">
         <p className="mb-1">
