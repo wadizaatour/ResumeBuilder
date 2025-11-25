@@ -6,6 +6,7 @@ import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
 const App = () => {
+  const [showForm, setShowForm] = useState(true);
   const exampleResumes = [
     {
       name: "Wadi Zaatour",
@@ -131,16 +132,16 @@ const App = () => {
       format: "a4",
     });
     const pageWidth = pdf.internal.pageSize.getWidth();
+    const pageHeight = pdf.internal.pageSize.getHeight();
     const originalWidth = element.style.width;
     const originalFontSize = element.style.fontSize;
     element.style.width = pageWidth + "pt";
-    element.style.fontSize = "12px"; // Reduce font size by 4px (default is 16px)
+    element.style.fontSize = "12px";
     await new Promise((r) => setTimeout(r, 200));
     const canvas = await html2canvas(element, { scale: 2 });
     element.style.width = originalWidth;
     element.style.fontSize = originalFontSize;
     const imgData = canvas.toDataURL("image/png");
-    const pageHeight = pdf.internal.pageSize.getHeight();
     const ratio = Math.min(
       pageWidth / canvas.width,
       pageHeight / canvas.height
@@ -154,118 +155,251 @@ const App = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 py-8">
-      <h1 className="text-4xl font-bold text-center mb-8 text-blue-700">
-        Resume Builder
-      </h1>
-      <div className="flex justify-center mb-6 gap-4">
-        {exampleResumes.map((ex, idx) => (
+    <div className="min-h-screen bg-gray-50 flex">
+      {/* Desktop left navbar with only menu icons */}
+      <div className="hidden md:flex flex-col items-center justify-center py-8 px-2 bg-white shadow fixed left-0 h-screen w-16 z-10">
+        <div className="flex flex-col gap-6">
           <button
-            key={idx}
-            className={`flex items-center gap-2 px-4 py-2 rounded border transition-all duration-150 shadow-sm ${
-              selectedExample === idx
-                ? "bg-blue-600 text-white"
-                : "bg-white text-blue-600 hover:bg-blue-50"
+            className={`p-3 rounded-full transition-all duration-150 ${
+              showForm ? "bg-blue-600 text-white" : "bg-gray-200 text-blue-600"
             }`}
-            onClick={() => {
-              setResumeData(exampleResumes[idx]);
-              setSelectedExample(idx);
-            }}
+            onClick={() => setShowForm(true)}
+            title="Add/Edit Sections"
           >
-            <span>
-              {idx === 0 ? (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M5 13l4 4L19 7"
-                  />
-                </svg>
-              ) : (
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  className="h-5 w-5"
-                  fill="none"
-                  viewBox="0 0 24 24"
-                  stroke="currentColor"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="10"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    fill="none"
-                  />
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    strokeWidth={2}
-                    d="M8 12h4v4"
-                  />
-                </svg>
-              )}
-            </span>
-            Example {idx + 1}
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+              />
+            </svg>
           </button>
-        ))}
-      </div>
-      <div className="container mx-auto flex flex-col md:flex-row gap-8 h-[80vh]">
-        <div className="md:w-7/12 w-full h-full overflow-y-auto">
-          <ResumeForm data={resumeData} setData={setResumeData} />
+          <button
+            className={`p-3 rounded-full transition-all duration-150 ${
+              !showForm ? "bg-blue-600 text-white" : "bg-gray-200 text-blue-600"
+            }`}
+            onClick={() => setShowForm(false)}
+            title="Preview Resume"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+              />
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+          </button>
         </div>
-        <div className="md:w-5/12 w-full h-full flex flex-col">
-          <div className="flex-1 overflow-y-auto">
-            <ResumePreview data={resumeData} ref={previewRef} />
-          </div>
-          <div className="flex justify-center mt-4 gap-2 sticky bottom-0 bg-gray-50 py-4 z-10">
-            <button
-              onClick={handlePrint}
-              className="flex items-center gap-2 bg-green-600 text-white px-6 py-2 rounded shadow hover:bg-green-700"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+      </div>
+
+      {/* Mobile footer menu with icons */}
+      <div className="md:hidden fixed bottom-0 left-0 w-full bg-white shadow flex justify-center gap-8 py-3 z-20 border-t">
+        <button
+          className={`p-3 rounded-full transition-all duration-150 ${
+            showForm ? "bg-blue-600 text-white" : "bg-gray-200 text-blue-600"
+          }`}
+          onClick={() => setShowForm(true)}
+          title="Add/Edit Sections"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+            />
+          </svg>
+        </button>
+        <button
+          className={`p-3 rounded-full transition-all duration-150 ${
+            !showForm ? "bg-blue-600 text-white" : "bg-gray-200 text-blue-600"
+          }`}
+          onClick={() => setShowForm(false)}
+          title="Preview Resume"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+            />
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+            />
+          </svg>
+        </button>
+      </div>
+
+      {/* Main content area */}
+      <div
+        className="flex-1 md:ml-16 overflow-y-auto"
+        style={{ height: "100vh" }}
+      >
+        <div className="py-4 px-4 min-h-full">
+          <div className="pb-20 md:pb-0">
+            <h1 className="text-3xl md:text-4xl font-bold text-center mb-6 text-blue-700">
+              Resume Builder
+            </h1>
+
+            {/* Example buttons horizontal scrollable bar */}
+            <div className="mb-6 overflow-x-auto">
+              <div className="flex gap-2 justify-center md:justify-start min-w-max mx-auto md:mx-0 w-fit">
+                {exampleResumes.map((ex, idx) => (
+                  <button
+                    key={idx}
+                    className={`flex items-center gap-2 px-4 py-2 rounded border transition-all duration-150 shadow-sm whitespace-nowrap ${
+                      selectedExample === idx
+                        ? "bg-blue-600 text-white"
+                        : "bg-white text-blue-600 hover:bg-blue-50"
+                    }`}
+                    onClick={() => {
+                      setResumeData(exampleResumes[idx]);
+                      setSelectedExample(idx);
+                    }}
+                  >
+                    <span>
+                      {idx === 0 ? (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M5 13l4 4L19 7"
+                          />
+                        </svg>
+                      ) : (
+                        <svg
+                          xmlns="http://www.w3.org/2000/svg"
+                          className="h-5 w-5"
+                          fill="none"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <circle
+                            cx="12"
+                            cy="12"
+                            r="10"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                            fill="none"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            strokeLinejoin="round"
+                            strokeWidth={2}
+                            d="M8 12h4v4"
+                          />
+                        </svg>
+                      )}
+                    </span>
+                    Example {idx + 1}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Content area with form and preview */}
+            <div className="flex flex-col md:flex-row gap-6">
+              {/* Form Section */}
+              <div
+                className={`md:w-7/12 w-full ${!showForm && "hidden md:block"}`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M12 4v16m8-8H4"
-                />
-              </svg>
-              Print Resume
-            </button>
-            <button
-              onClick={handleDownloadPDF}
-              className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700"
-            >
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                fill="none"
-                viewBox="0 0 24 24"
-                stroke="currentColor"
+                <ResumeForm data={resumeData} setData={setResumeData} />
+              </div>
+
+              {/* Preview Section */}
+              <div
+                className={`md:w-5/12 w-full ${showForm && "hidden md:block"}`}
               >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  strokeWidth={2}
-                  d="M19 21H5a2 2 0 01-2-2V7a2 2 0 012-2h3V3h8v2h3a2 2 0 012 2v12a2 2 0 01-2 2z"
-                />
-              </svg>
-              Download as PDF
-            </button>
+                <div className="mb-4">
+                  <ResumePreview data={resumeData} ref={previewRef} />
+                </div>
+                <div className="flex flex-col sm:flex-row justify-center gap-2 sticky bottom-20 md:bottom-4 bg-gray-50 py-4 z-10">
+                  <button
+                    onClick={handlePrint}
+                    className="flex items-center justify-center gap-2 bg-green-600 text-white px-6 py-2 rounded shadow hover:bg-green-700"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"
+                      />
+                    </svg>
+                    Print Resume
+                  </button>
+                  <button
+                    onClick={handleDownloadPDF}
+                    className="flex items-center justify-center gap-2 bg-blue-600 text-white px-6 py-2 rounded shadow hover:bg-blue-700"
+                  >
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      className="h-5 w-5"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                    >
+                      <path
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
+                        strokeWidth={2}
+                        d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                      />
+                    </svg>
+                    Download as PDF
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
