@@ -55,10 +55,9 @@ const ResumePreview = forwardRef(function ResumePreview({ data }, ref) {
       </div>
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-1 text-gray-700">Education</h2>
-        <ul className="list-disc pl-5 text-gray-800">
+        <ul className="pl-0 text-gray-800">
           {data.educationList.map((edu, i) => (
             <li key={i} className="flex items-center gap-2">
-              <span className="list-disc pl-0">&#8226;</span>
               <span>{edu}</span>
             </li>
           ))}
