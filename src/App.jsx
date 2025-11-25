@@ -125,19 +125,31 @@ const App = () => {
   const handleDownloadPDF = async () => {
     const element = previewRef.current;
     if (!element) return;
-    const canvas = await html2canvas(element, { scale: 2 });
-    const imgData = canvas.toDataURL("image/png");
     const pdf = new jsPDF({
       orientation: "portrait",
       unit: "pt",
       format: "a4",
     });
     const pageWidth = pdf.internal.pageSize.getWidth();
+    const originalWidth = element.style.width;
+    const originalFontSize = element.style.fontSize;
+    element.style.width = pageWidth + "pt";
+    element.style.fontSize = "12px"; // Reduce font size by 4px (default is 16px)
+    await new Promise((r) => setTimeout(r, 200));
+    const canvas = await html2canvas(element, { scale: 2 });
+    element.style.width = originalWidth;
+    element.style.fontSize = originalFontSize;
+    const imgData = canvas.toDataURL("image/png");
     const pageHeight = pdf.internal.pageSize.getHeight();
-    // Fill the entire page with the image
-    const imgWidth = pageWidth;
-    const imgHeight = pageHeight;
-    pdf.addImage(imgData, "PNG", 0, 0, imgWidth, imgHeight);
+    const ratio = Math.min(
+      pageWidth / canvas.width,
+      pageHeight / canvas.height
+    );
+    const imgWidth = canvas.width * ratio;
+    const imgHeight = canvas.height * ratio;
+    const x = (pageWidth - imgWidth) / 2;
+    const y = (pageHeight - imgHeight) / 2;
+    pdf.addImage(imgData, "PNG", x, y, imgWidth, imgHeight);
     pdf.save("resume.pdf");
   };
 
@@ -209,11 +221,11 @@ const App = () => {
         <div className="md:w-7/12 w-full h-full overflow-y-auto">
           <ResumeForm data={resumeData} setData={setResumeData} />
         </div>
-        <div className="md:w-5/12 w-full h-full overflow-y-auto">
-          <div>
+        <div className="md:w-5/12 w-full h-full flex flex-col">
+          <div className="flex-1 overflow-y-auto">
             <ResumePreview data={resumeData} ref={previewRef} />
           </div>
-          <div className="flex justify-center mt-4 gap-2">
+          <div className="flex justify-center mt-4 gap-2 sticky bottom-0 bg-gray-50 py-4 z-10">
             <button
               onClick={handlePrint}
               className="flex items-center gap-2 bg-green-600 text-white px-6 py-2 rounded shadow hover:bg-green-700"
