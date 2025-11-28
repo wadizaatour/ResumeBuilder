@@ -95,6 +95,18 @@ const ResumeForm = ({ data, setData }) => {
       ),
     },
     {
+      label: "Location",
+      content: (
+        <input
+          name="location"
+          value={data.location}
+          onChange={handleChange}
+          required
+          className="p-2 border border-gray-300 rounded w-full"
+        />
+      ),
+    },
+    {
       label: "Summary",
       content: (
         <textarea

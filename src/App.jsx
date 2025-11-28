@@ -1,12 +1,14 @@
 import React, { useRef, useState } from "react";
 import ResumeForm from "./components/ResumeForm";
 import ResumePreview from "./components/ResumePreview";
+import MotivationLetter from "./components/MotivationLetter";
 import { useReactToPrint } from "react-to-print";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
 
 const App = () => {
   const [showForm, setShowForm] = useState(true);
+  const [showMotivation, setShowMotivation] = useState(false);
   const exampleResumes = [
     {
       name: "Wadi Zaatour",
@@ -161,9 +163,14 @@ const App = () => {
         <div className="flex flex-col gap-8">
           <button
             className={`p-3 rounded-full transition-all duration-150 ${
-              showForm ? "bg-blue-600 text-white" : "bg-gray-200 text-blue-600"
+              showForm && !showMotivation
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-blue-600"
             }`}
-            onClick={() => setShowForm(true)}
+            onClick={() => {
+              setShowForm(true);
+              setShowMotivation(false);
+            }}
             title="Add/Edit Sections"
           >
             <svg
@@ -183,9 +190,14 @@ const App = () => {
           </button>
           <button
             className={`p-3 rounded-full transition-all duration-150 ${
-              !showForm ? "bg-blue-600 text-white" : "bg-gray-200 text-blue-600"
+              !showForm && !showMotivation
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-blue-600"
             }`}
-            onClick={() => setShowForm(false)}
+            onClick={() => {
+              setShowForm(false);
+              setShowMotivation(false);
+            }}
             title="Preview Resume"
           >
             <svg
@@ -206,6 +218,33 @@ const App = () => {
                 strokeLinejoin="round"
                 strokeWidth={2}
                 d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+              />
+            </svg>
+          </button>
+          <button
+            className={`p-3 rounded-full transition-all duration-150 ${
+              showMotivation
+                ? "bg-blue-600 text-white"
+                : "bg-gray-200 text-blue-600"
+            }`}
+            onClick={() => {
+              setShowForm(false);
+              setShowMotivation(true);
+            }}
+            title="Motivation Letter"
+          >
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              className="h-6 w-6"
+              fill="none"
+              viewBox="0 0 24 24"
+              stroke="currentColor"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M8 10h.01M12 10h.01M16 10h.01M9 16h6a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v7a2 2 0 002 2z"
               />
             </svg>
           </button>
@@ -257,9 +296,14 @@ const App = () => {
       <div className="md:hidden fixed bottom-0 left-0 w-full bg-white shadow flex justify-center gap-4 py-3 z-20 border-t">
         <button
           className={`p-3 rounded-full transition-all duration-150 ${
-            showForm ? "bg-blue-600 text-white" : "bg-gray-200 text-blue-600"
+            showForm && !showMotivation
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 text-blue-600"
           }`}
-          onClick={() => setShowForm(true)}
+          onClick={() => {
+            setShowForm(true);
+            setShowMotivation(false);
+          }}
           title="Add/Edit Sections"
         >
           <svg
@@ -279,9 +323,14 @@ const App = () => {
         </button>
         <button
           className={`p-3 rounded-full transition-all duration-150 ${
-            !showForm ? "bg-blue-600 text-white" : "bg-gray-200 text-blue-600"
+            !showForm && !showMotivation
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 text-blue-600"
           }`}
-          onClick={() => setShowForm(false)}
+          onClick={() => {
+            setShowForm(false);
+            setShowMotivation(false);
+          }}
           title="Preview Resume"
         >
           <svg
@@ -302,6 +351,33 @@ const App = () => {
               strokeLinejoin="round"
               strokeWidth={2}
               d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+            />
+          </svg>
+        </button>
+        <button
+          className={`p-3 rounded-full transition-all duration-150 ${
+            showMotivation
+              ? "bg-blue-600 text-white"
+              : "bg-gray-200 text-blue-600"
+          }`}
+          onClick={() => {
+            setShowForm(false);
+            setShowMotivation(true);
+          }}
+          title="Motivation Letter"
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            className="h-6 w-6"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              strokeWidth={2}
+              d="M8 10h.01M12 10h.01M16 10h.01M9 16h6a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v7a2 2 0 002 2z"
             />
           </svg>
         </button>
@@ -421,74 +497,78 @@ const App = () => {
               </div>
             </div>
 
-            {/* Content area with form and preview */}
-            <div className="flex flex-col md:flex-row gap-8 md:gap-8 items-stretch justify-center md:items-start w-full">
-              {/* Form Section */}
-              <div
-                className={`md:flex-1 md:max-w-[600px] w-full flex flex-col ${
-                  !showForm && "hidden md:flex"
-                }`}
-                style={{ minWidth: 0 }}
-              >
-                <div className="mb-3">
-                  <h2 className="text-xl font-semibold text-gray-700 flex items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-blue-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
-                      />
-                    </svg>
-                    Edit Resume
-                  </h2>
+            {/* Content area: Resume or Motivation Letter */}
+            {showMotivation ? (
+              <MotivationLetter />
+            ) : (
+              <div className="flex flex-col md:flex-row gap-8 md:gap-8 items-stretch justify-center md:items-start w-full">
+                {/* Form Section */}
+                <div
+                  className={`md:flex-1 md:max-w-[600px] w-full flex flex-col ${
+                    !showForm && "hidden md:flex"
+                  }`}
+                  style={{ minWidth: 0 }}
+                >
+                  <div className="mb-3">
+                    <h2 className="text-xl font-semibold text-gray-700 flex items-center gap-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 text-blue-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"
+                        />
+                      </svg>
+                      Edit Resume
+                    </h2>
+                  </div>
+                  <ResumeForm data={resumeData} setData={setResumeData} />
                 </div>
-                <ResumeForm data={resumeData} setData={setResumeData} />
-              </div>
 
-              {/* Preview Section */}
-              <div
-                className={`md:flex-1 md:max-w-[650px] w-full flex flex-col ${
-                  showForm && "hidden md:flex"
-                }`}
-                style={{ minWidth: 0 }}
-              >
-                <div className="mb-3">
-                  <h2 className="text-xl font-semibold text-gray-700 flex items-center gap-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      className="h-5 w-5 text-blue-600"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
-                      />
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth={2}
-                        d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
-                      />
-                    </svg>
-                    Preview
-                  </h2>
-                </div>
-                <div className="mb-4 flex-1 flex items-start justify-center">
-                  <ResumePreview data={resumeData} ref={previewRef} />
+                {/* Preview Section */}
+                <div
+                  className={`md:flex-1 md:max-w-[650px] w-full flex flex-col ${
+                    showForm && "hidden md:flex"
+                  }`}
+                  style={{ minWidth: 0 }}
+                >
+                  <div className="mb-3">
+                    <h2 className="text-xl font-semibold text-gray-700 flex items-center gap-2">
+                      <svg
+                        xmlns="http://www.w3.org/2000/svg"
+                        className="h-5 w-5 text-blue-600"
+                        fill="none"
+                        viewBox="0 0 24 24"
+                        stroke="currentColor"
+                      >
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                        <path
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth={2}
+                          d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                        />
+                      </svg>
+                      Preview
+                    </h2>
+                  </div>
+                  <div className="mb-4 flex-1 flex items-start justify-center">
+                    <ResumePreview data={resumeData} ref={previewRef} />
+                  </div>
                 </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       </div>

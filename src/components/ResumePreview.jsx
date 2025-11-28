@@ -11,6 +11,10 @@ const ResumePreview = forwardRef(function ResumePreview({ data }, ref) {
         <p className="mb-1">
           <span className="font-semibold">Phone:</span> {data.phone}
         </p>
+        <p className="mb-1">
+          <span className="font-semibold">Location:</span>{" "}
+          {data.location || "Europe / Netherlands"}
+        </p>
       </div>
       <div className="mb-6">
         <h2 className="text-xl font-semibold mb-1 text-gray-700">Summary</h2>
