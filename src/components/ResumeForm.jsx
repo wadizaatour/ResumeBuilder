@@ -7,6 +7,11 @@ const ResumeForm = ({ data, setData }) => {
   const [workDesc, setWorkDesc] = useState("");
   const [workBullets, setWorkBullets] = useState([]);
   const [languageInput, setLanguageInput] = useState("");
+  const [editingIndex, setEditingIndex] = useState(-1);
+  const [editTitle, setEditTitle] = useState("");
+  const [editYear, setEditYear] = useState("");
+  const [editBullets, setEditBullets] = useState([]);
+ 
 
   const handleChange = (e) => {
     setData({ ...data, [e.target.name]: e.target.value });
@@ -202,16 +207,86 @@ const ResumeForm = ({ data, setData }) => {
           </button>
           <ul className="mt-2">
             {data.work.map((job, i) => (
-              <li key={i} className="mb-2">
-                <div className="flex justify-between font-semibold">
-                  <span>{job.title}</span>
-                  <span className="text-gray-500">{job.year}</span>
-                </div>
-                <ul className="list-disc pl-5">
-                  {job.bullets.map((b, j) => (
-                    <li key={j}>{b}</li>
-                  ))}
-                </ul>
+              <li key={i} className="mb-4 border p-3 rounded">
+                {editingIndex === i ? (
+                  <div>
+                    <div className="flex gap-2 mb-2">
+                      <input
+                        value={editTitle}
+                        onChange={(e) => setEditTitle(e.target.value)}
+                        placeholder="Job Title"
+                        className="p-2 border border-gray-300 rounded w-full"
+                      />
+                      <input
+                        value={editYear}
+                        onChange={(e) => setEditYear(e.target.value)}
+                        placeholder="Year"
+                        className="p-2 border border-gray-300 rounded w-24"
+                      />
+                    </div>
+                    <div className="mb-2">
+                      <div className="mb-2 font-semibold">Bullets (one per line)</div>
+                      <textarea
+                        value={editBullets.join("\n")}
+                        onChange={(e) => setEditBullets(e.target.value.split("\n"))}
+                        placeholder="Enter each bullet on a new line"
+                        className="p-2 border border-gray-300 rounded w-full h-24"
+                      />
+                    </div>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          const updated = data.work.map((w, idx) =>
+                            idx === i
+                              ? { title: editTitle, year: editYear, bullets: editBullets }
+                              : w
+                          );
+                          setData({ ...data, work: updated });
+                          setEditingIndex(-1);
+                        }}
+                        className="bg-green-600 text-white px-3 rounded"
+                      >
+                        Save
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingIndex(-1);
+                        }}
+                        className="bg-gray-300 px-3 rounded"
+                      >
+                        Cancel
+                      </button>
+                    </div>
+                  </div>
+                ) : (
+                  <div>
+                    <div className="flex justify-between font-semibold">
+                      <span>{job.title}</span>
+                      <span className="text-gray-500">{job.year}</span>
+                    </div>
+                    <ul className="list-disc pl-5 mb-2">
+                      {job.bullets.map((b, j) => (
+                        <li key={j}>{b}</li>
+                      ))}
+                    </ul>
+                    <div className="flex gap-2">
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setEditingIndex(i);
+                          setEditTitle(job.title);
+                          setEditYear(job.year);
+                          setEditBullets(job.bullets || []);
+                        }}
+                        className="bg-yellow-400 text-white px-3 rounded"
+                      >
+                        Edit
+                      </button>
+                    </div>
+                  </div>
+                )}
               </li>
             ))}
           </ul>
